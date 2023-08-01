@@ -1,4 +1,1 @@
-poetry
-Flask
-Gunicorn
-python-dotenv
+poetry==1.4
