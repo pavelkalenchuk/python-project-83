@@ -1,2 +1,4 @@
-Gunicorn
 poetry
+Flask
+Gunicorn
+python-dotenv
