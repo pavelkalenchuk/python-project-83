@@ -1,4 +1,5 @@
 from flask import Flask
+from flask import render_template
 from settings import SECRET_KEY
 
 
@@ -8,4 +9,6 @@ app.config["SECRET_KEY"] = SECRET_KEY
 
 @app.route("/")
 def index():
-    return "Hello hexlet"
+    return render_template(
+        'index.html'
+    )
