@@ -4,8 +4,13 @@ install:
 dev:
 		poetry run flask --app page_analyzer:app --debug run
 
-lint:
+lint_py:
 		poetry run flake8 page_analyzer
+
+lint_sql:
+		poetry run sqlfluff lint database.sql --dialect postgres
+
+lint: lint_py lint_sql
 
 black:
 		poetry run black page_analyzer
