@@ -7,5 +7,5 @@ dist/
 coverage.xml
 trash/
 .env
-try.py
+try/
 pyproject

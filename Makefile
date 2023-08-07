@@ -33,4 +33,9 @@ PORT ?= 8000
 start:
 	poetry run gunicorn -w 5 -b 0.0.0.0:$(PORT) page_analyzer:app
 
-run: install start
+DATABASE_URL ?= postgres://pavel:ER6HY8FbStjVTpbjO0iR57sVhhWdUmtl@dpg-cj6o674l975s73e7aof0-a.frankfurt-postgres.render.com/page_analyzer_42hk
+database:
+		psql -a -d $(DATABASE_URL) -f database.sql
+
+
+build: install database
