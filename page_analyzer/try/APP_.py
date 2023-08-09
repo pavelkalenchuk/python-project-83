@@ -10,7 +10,7 @@ from flask import (
 )
 import os
 
-from repository import PostsRepository
+from page_analyzer.database import PostsRepository
 from validator import validate
 
 

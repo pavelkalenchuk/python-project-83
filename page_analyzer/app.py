@@ -13,8 +13,6 @@ from urllib.parse import urlparse
 from validators import url
 
 
-
-
 app = Flask(__name__)
 app.config["SECRET_KEY"] = SECRET_KEY
 
@@ -28,7 +26,16 @@ def index():
 @app.post("/urls")
 def urls_post():
     data = request.form.to_dict()
-    url_ = data['url']
+    url_adr = data['url_adr']
+    if url(url_adr):
+        flash('Некорректный URL')
+        return render_template(
+            '/',
+            url_adr = url_adr
+        ), 422
+      
+
+
     
 
 """ @app.post("/urls")
