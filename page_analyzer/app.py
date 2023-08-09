@@ -25,8 +25,13 @@ def index():
         'index.html'
     )
 
-
 @app.post("/urls")
 def urls_post():
-    url_address = request.form.в
+    data = request.form.to_dict()
+    url_ = data['url']
+    
+
+""" @app.post("/urls")
+def urls_post():
+    url_address = request.form.в """
 
