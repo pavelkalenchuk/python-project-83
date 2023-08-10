@@ -24,11 +24,23 @@ def validate_url(url_adr):
     ]
     return False if False in validators_list else True
 
+url_adr = 'https://www.yandex.ru'
 ic(type(url('https://www.yandex.ru')))
 ic(url('https://www.yandex.ru'))
 ic((type(url(''))))
 ic((url('')))
 print((url('')))
+
+#a = url('https:www.yandex')
+a = url('')
+ic(a)
+ic(a.value)
+ic(a.public)
+
+url_adr = 'https:www.yandex'
+
+if not a:
+    print('not validated')
 
 
 
