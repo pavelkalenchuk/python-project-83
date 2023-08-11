@@ -19,3 +19,19 @@ except:
 
 add_url_to_db(url, data_url)
 
+
+@app.route('/goto', methods=['POST'])
+def redirector():
+    username = request.form.get('username')
+    return redirect(url_for('user', name = username))
+
+
+@app.route('/goto1')
+def redirector_1():
+    return redirect('https://www.google.com')
+
+
+
+@app.route('/user/<name>')
+def user(name):
+    return f'Hello {name}'

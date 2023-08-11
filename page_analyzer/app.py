@@ -11,7 +11,7 @@ from flask import (
 from settings import SECRET_KEY, DATABASE_URL
 from urllib.parse import urlparse
 from validators import url as validate_url
-from repository import add_url_to_db
+from repository import add_url_db, get_url_info_db
 
 
 app = Flask(__name__)
@@ -24,10 +24,11 @@ def index():
         'index.html'
     )
 
-@app.post("/urls")
+@app.post("/goto_url")
 def urls_post():
-    data = request.form.to_dict()
-    url = data['url_adr']
+    # data = request.form.to_dict()
+    # url = data['url_adr']
+    url = request.form.get('url')
     validated_url = validate_url(url)
     if not validated_url or len(url) > 255:
         if len(url) > 255:
@@ -41,10 +42,21 @@ def urls_post():
         return render_template(
             '/',
             url = url
-        )
-    # добавляем в БД
-    add_url_to_db(url, DATABASE_URL)
+        ), 422
+
+    add_url_db(url, DATABASE_URL) # добавляем в БД
     flash('Страница успешно добавлена', 'success')
-    
-    
-    
+    return redirect(
+        ''
+    )
+
+
+@app.route('/urls/<id>')
+def url(id):
+    messages = get_flashed_messages(with_categories=True)
+
+
+@app.route('/urls/<id>/', methods=['GET', 'POST'])
+def url_check(id):
+
+

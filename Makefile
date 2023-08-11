@@ -37,5 +37,7 @@ DATABASE_URL ?= postgres://pavel:ER6HY8FbStjVTpbjO0iR57sVhhWdUmtl@dpg-cj6o674l97
 database:
 		psql -a -d $(DATABASE_URL) -f database.sql
 
+conn:
+		psql -a -d $(DATABASE_URL)
 
 build: install database
