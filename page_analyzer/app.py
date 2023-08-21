@@ -11,7 +11,7 @@ from flask import (
 from settings import SECRET_KEY, DATABASE_URL
 from urllib.parse import urlparse
 from validators import url as validate_url
-from repository import add_url_db, get_url_info_db
+from page_analyzer.repository import add_url_db, get_url_info_db
 
 
 app = Flask(__name__)
@@ -35,7 +35,7 @@ def urls_post():
             flash('URL превышает 255 символов', 'error')
             flash('Некорректный URL', 'error')
         if not validated_url.value:
-            flash('Некорректный URL')
+            flash('Некорректный URL', 'error')
             flash('URL обязателен', 'error')
         else:
             flash('Некорректный URL', 'error')
@@ -56,7 +56,7 @@ def url(id):
     messages = get_flashed_messages(with_categories=True)
 
 
-@app.route('/urls/<id>/', methods=['GET', 'POST'])
-def url_check(id):
+""" @app.route('/urls/<id>/', methods=['GET', 'POST'])
+def url_check(id): """
 
 
