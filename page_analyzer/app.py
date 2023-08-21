@@ -24,7 +24,7 @@ def index():
         'index.html'
     )
 
-@app.post("/goto_url")
+@app.route("/goto_url", method="POST")
 def urls_post():
     # data = request.form.to_dict()
     # url = data['url_adr']
@@ -52,7 +52,7 @@ def urls_post():
 
 
 @app.route('/urls/<id>')
-def url(id):
+def url_page(id):
     messages = get_flashed_messages(with_categories=True)
 
 
