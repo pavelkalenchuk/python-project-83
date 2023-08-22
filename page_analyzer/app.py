@@ -25,7 +25,7 @@ def index():
     )
 
 @app.route("/goto_url", methods=["POST"])
-def urls_post():
+def url_post():
     # data = request.form.to_dict()
     # url = data['url_adr']
     url = request.form.get('url')
@@ -56,10 +56,7 @@ def urls_post():
     url_info = get_url_info_db(url, DATABASE_URL)
     id_url = url_info['id']
     return redirect(
-        url_for(
-        'url_page',
-        id = id_url,
-        )
+        url_for('url_page', id=id_url)
     )
 
 
@@ -68,6 +65,7 @@ def url_page(id):
     messages = get_flashed_messages(with_categories=True)
     url_info = get_url_info_db(DATABASE_URL, id=id)
     return render_template(
-        'urls/show.html'
+        'urls/show.html',
+        messages = messages,
+        url_info=url_info
     )
-
