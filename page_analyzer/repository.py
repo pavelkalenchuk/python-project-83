@@ -15,11 +15,16 @@ def add_url_db(url: str, db_url):
     conn.close()
 
 
-def get_url_info_db(url: str, db_url):
+def get_url_info_db(db_url, **columns):
     conn = psycopg2.connect(db_url)
     cursor = conn.cursor()
-    SQL = "SELECT id, name, created_at FROM urls WHERE name = %s"
-    cursor.execute(SQL, (url,))
+    if 'name' in columns:
+        column = 'name'
+        value = columns["name"]
+    if 'id' in columns:
+        column = 'id'
+        value = columns['id']
+    cursor.execute(f"SELECT id, name, created_at FROM urls WHERE {column} = (%s)", (value,))
     selection = cursor.fetchone()
     if not selection:
         return False

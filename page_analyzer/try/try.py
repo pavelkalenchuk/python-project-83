@@ -11,4 +11,14 @@ ic(url_adr)
 
 ic(url(url_adr))
 
+d = {
+    'q': 1,
+    'a': 2
+}
+
+if 'e' in d:
+    ic('rrr')
+else:
+    ic('no')
+
 

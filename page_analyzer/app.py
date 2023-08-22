@@ -62,8 +62,12 @@ def urls_post():
         )
     )
 
-""" 
+
 @app.route('/urls/<id>')
 def url_page(id):
-    messages = get_flashed_messages(with_categories=True) """
+    messages = get_flashed_messages(with_categories=True)
+    url_info = get_url_info_db(DATABASE_URL, id=id)
+    return render_template(
+        'urls/show.html'
+    )
 
