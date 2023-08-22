@@ -14,13 +14,31 @@
   <a class="navbar-brand text-black" href="/">Анализатор страниц</a>
   <div id="navbarNav">
       <ul class="navbar-nav">
-        <li class="nav-item"><a class="nav-link text-primary" href="/urls">Сайты</a></li>
+        <li class="nav-item"><a class="nav-link text-primary" href="{{ url_for('get_urls') }}">Сайты</a></li>
       </ul>
     </ul>
   </div>
 </nav>
 
   </header>
+
+</header>
+<div class="container">
+  <div class="row">
+    <div class="col-lg-8 col-md-10 mx-auto content">
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{ category  }} mt-3 alert-dismissible" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" onclick=delete_flash(this)>
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+        {% endfor %}
+      {% endif %}
+    </div>
+  </div>
+</div> 
   
   
 
@@ -33,8 +51,8 @@
   <div class="col-12 col-md-10 col-lg-8 mx-auto border rounded-3 bg-light p-5">
     <h1 class="display-3">Анализатор страниц</h1>
     <p class="lead">Бесплатно проверяйте сайты на SEO-пригодность</p>
-    <form action="{{url_for(url_post)}}" method="post" class="d-flex justify-content-center" required>
-    <input type="text" name="url" placeholder="https://www.example.com"value=""  class="form-control form-control-lg">
+    <form action="{{ url_for('url_post') }}" method="post" class="d-flex justify-content-center" required>
+    <input type="text" name="url" placeholder="https://www.example.com" value="{{url}}"  class="form-control form-control-lg">
     <input type="submit" class="btn btn-primary  btn-lg ms-3 px-5 text-uppercase mx-3 bg-success" value="Проверить">
 </form>
   </div>

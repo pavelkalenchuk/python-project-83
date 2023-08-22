@@ -1,10 +1,12 @@
 import psycopg2
 
 from datetime import datetime
+from settings import DATABASE_URL
 
 
-def add_url_db(url: str, db_url):
-    conn = psycopg2.connect(db_url)
+
+def add_url_db(url: str):
+    conn = psycopg2.connect(DATABASE_URL)
     cursor = conn.cursor()
     cursor.execute(
         "INSERT INTO urls (name, created_at) VALUES (%s, %s)",
@@ -15,8 +17,8 @@ def add_url_db(url: str, db_url):
     conn.close()
 
 
-def get_url_info_db(db_url, **columns):
-    conn = psycopg2.connect(db_url)
+def get_url_info_db(**columns):
+    conn = psycopg2.connect(DATABASE_URL)
     cursor = conn.cursor()
     if 'name' in columns:
         column = 'name'
