@@ -43,7 +43,8 @@ def urls_post():
             '/',
             url = url
         ), 422
-
+    
+    
     add_url_db(url, DATABASE_URL) # добавляем в БД
     flash('Страница успешно добавлена', 'success')
     return redirect(
