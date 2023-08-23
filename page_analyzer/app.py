@@ -11,7 +11,7 @@ from flask import (
 from settings import SECRET_KEY, DATABASE_URL
 from urllib.parse import urlparse
 from validators import url as validate_url
-from page_analyzer.repository import add_url_db, get_url_info_db
+from page_analyzer.repository import add_url_db, get_url_info_db, get_urls_by_date
 
 
 from icecream import ic
@@ -22,31 +22,24 @@ app.config["SECRET_KEY"] = SECRET_KEY
 
 @app.route("/")
 def index():
-    ic('index loaded')
-    messages = get_flashed_messages(with_categories=True)
     return render_template(
-        'index.html',
-        messages = messages
+        'index.html'
     )
 
-@app.post("/")
+@app.post("/urls")
 def url_post():
-    # data = request.form.to_dict()
-    # url = data['url_adr']
     url = request.form.get('url')
     validated_url = validate_url(url)
 
-    if not validated_url or len(url) > 255:
-        if len(url) > 255:
-            flash('URL превышает 255 символов', 'danger')
-            flash('Некорректный URL', 'danger')
+    if not validated_url or (len(url) > 255 and validate_url):
         if not validated_url.value:
-            flash('Некорректный URL', 'danger')
             flash('URL обязателен', 'danger')
         else:
             flash('Некорректный URL', 'danger')
+        if len(url) > 255:
+            flash('URL превышает 255 символов', 'danger')
         return render_template(
-            'urls/try.html',
+            'index.html',
             url = url,
         )
 
@@ -79,6 +72,5 @@ def url_page(id):
 
 @app.route('/urls')
 def get_urls():
-    render_template(
-        'urls/index.html'
-    )
+    urls = get_urls_by_date()
+    return render_template('urls/index.html')
