@@ -4,6 +4,7 @@ from icecream import ic
 
 MAX_CHARS = 255
 
+
 def validate_len_url(url_adr):
     return False if len(url_adr) > MAX_CHARS else True
 
@@ -20,27 +21,25 @@ def validate_url(url_adr):
     validators_list = [
         validate_len_url(url_adr),
         validate_url_url(url_adr),
-        validate_url_empry(url_adr)
+        validate_url_empry(url_adr),
     ]
     return False if False in validators_list else True
 
-url_adr = 'https://www.yandex.ru'
-ic(type(url('https://www.yandex.ru')))
-ic(url('https://www.yandex.ru'))
-ic((type(url(''))))
-ic((url('')))
-print((url('')))
 
-#a = url('https:www.yandex')
-a = url('')
+url_adr = "https://www.yandex.ru"
+ic(type(url("https://www.yandex.ru")))
+ic(url("https://www.yandex.ru"))
+ic((type(url(""))))
+ic((url("")))
+print((url("")))
+
+# a = url('https:www.yandex')
+a = url("")
 ic(a)
 ic(a.value)
 ic(a.public)
 
-url_adr = 'https:www.yandex'
+url_adr = "https:www.yandex"
 
 if not a:
-    print('not validated')
-
-
-
+    print("not validated")

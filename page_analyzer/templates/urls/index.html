@@ -15,7 +15,7 @@
   <a class="navbar-brand" href="/">Анализатор страниц</a>
   <div id="navbarNav">
       <ul class="navbar-nav">
-        <li class="nav-item"><a class="nav-link " href="/urls">Сайты</a></li>
+        <li class="nav-item"><a class="nav-link " href="{{ url_for('urls_get') }}">Сайты</a></li>
       </ul>
     </ul>
   </div>
@@ -41,22 +41,16 @@
     </tr>
     </thead>
     <tbody>
-      
-        <tr>
-          <td>1</td>
-          <td>
-            <a href="/urls/1">
-              https://www.pythonicway.com
-            </a>
-          </td>
-          
-          <td></td>
-          
-          
-          <td></td>
-          
-        </tr>
-      
+      {% if urls %}
+      {% for url in urls %}
+      <tr>
+        <td>{{url.id}}</td>
+        <td><a href="{{ url_for('url_page', id=url.id) }}">{{url.name}}</a></td>
+        <td></td>
+        <td></td>
+      </tr>
+      {% endfor %}
+      {% endif %}
     </tbody>
   </table>
 </div>
@@ -66,7 +60,7 @@
   <footer class="border-top py-3 mt-5 flex-shrink-0">
   <div class="container-lg">
     <div class="text-center">
-      <a href="https://ru.hexlet.io/" target="_blank">Hexlet</a>
+      <a href="https://pavelkalenchuk.github.io/" target="_blank">Pavel Kalenchuk</a>
     </div>
   </div>
 </footer>

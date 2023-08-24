@@ -14,7 +14,7 @@
   <a class="navbar-brand text-black" href="/">Анализатор страниц</a>
   <div id="navbarNav">
       <ul class="navbar-nav">
-        <li class="nav-item"><a class="nav-link text-primary" href="{{ url_for('get_urls') }}">Сайты</a></li>
+        <li class="nav-item"><a class="nav-link text-primary" href="{{ url_for('urls_get') }}">Сайты</a></li>
       </ul>
     </ul>
   </div>
@@ -53,7 +53,7 @@
   <div class="col-12 col-md-10 col-lg-8 mx-auto border rounded-3 bg-light p-5">
     <h1 class="display-3">Анализатор страниц</h1>
     <p class="lead">Бесплатно проверяйте сайты на SEO-пригодность</p>
-    <form action="{{ url_for('url_post') }}" method="post" class="d-flex justify-content-center" required>
+    <form action="{{ url_for('urls_post') }}" method="post" class="d-flex justify-content-center" required>
     <input type="text" name="url" placeholder="https://www.example.com" value="{{url}}"  class="form-control form-control-lg">
     <input type="submit" class="btn btn-primary  btn-lg ms-3 px-5 text-uppercase mx-3 bg-success" value="Проверить">
 </form>
@@ -65,7 +65,7 @@
   <footer class="border-top py-3 mt-5 flex-shrink-0">
   <div class="container-lg">
     <div class="text-center">
-      <a href="https://ru.hexlet.io/" target="_blank">Hexlet</a>
+      <a href="https://pavelkalenchuk.github.io/" target="_blank">Pavel Kalenchuk</a>
     </div>
   </div>
 </footer>
