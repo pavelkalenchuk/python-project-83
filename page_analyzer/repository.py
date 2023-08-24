@@ -43,7 +43,7 @@ def get_url_info_db(**columns):
     return result
 
 
-def convert(tuple_):
+def convert(tuple_: tuple):
     KEYS = ("id", "name", "created_at")
     result = dict(zip(KEYS, tuple_))
     return result
@@ -59,3 +59,12 @@ def get_urls_by_date():
     conn.close()
     result = list(map(convert, selection))
     return result
+
+
+def add_url_check()
+
+
+def get_url_cheks(url: str):
+    conn = psycopg2.connect(DATABASE_URL)
+    cursor = conn.cursor()
+    SQL = ""

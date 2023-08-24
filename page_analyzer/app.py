@@ -71,6 +71,11 @@ def url_page(id):
     )
 
 
+@app.post("urls/<id>/checks")
+def url_cheks(id):
+    url_cheks = 
+
+
 @app.route("/urls")
 def urls_get():
     urls = get_urls_by_date()
