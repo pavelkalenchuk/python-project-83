@@ -8,7 +8,7 @@ from flask import ( # noqa F401
     request,
     url_for,
 )
-from settings import SECRET_KEY
+from settings import SECRET_KEY, DATABASE_URL
 from urllib.parse import urlparse
 from validators import url as validate_url
 from page_analyzer.repository import (
@@ -26,7 +26,7 @@ app.config["SECRET_KEY"] = SECRET_KEY
 
 @app.route("/")
 def index():
-    return render_template("index.html")
+    return render_template("index.html", sk = SECRET_KEY, db = DATABASE_URL)
 
 
 @app.post("/urls")
@@ -71,9 +71,9 @@ def url_page(id):
     )
 
 
-@app.post("urls/<id>/checks")
+""" @app.post("urls/<id>/checks")
 def url_cheks(id):
-    url_cheks = 
+    url_cheks =  """
 
 
 @app.route("/urls")

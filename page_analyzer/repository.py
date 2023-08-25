@@ -61,9 +61,6 @@ def get_urls_by_date():
     return result
 
 
-def add_url_check()
-
-
 def get_url_cheks(url: str):
     conn = psycopg2.connect(DATABASE_URL)
     cursor = conn.cursor()
