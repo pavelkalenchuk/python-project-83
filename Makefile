@@ -47,4 +47,7 @@ local:
 localdb:
 		psql -a -d $(DATABASE_URL_LOCAL) -f database.sql
 
+connl:
+		psql -a -d $(DATABASE_URL_LOCAL)
+
 build: install database

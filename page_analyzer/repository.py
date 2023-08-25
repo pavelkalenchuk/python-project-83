@@ -1,8 +1,8 @@
 import psycopg2
-
 import datetime as dt
+
+from icecream import ic  # noqa F401
 from settings import DATABASE_URL
-from icecream import ic # noqa F401
 
 
 def add_url_db(url: str):
@@ -60,12 +60,19 @@ def get_urls_by_date():
     return result
 
 
-def add_url_checks(url_id):
+def add_url_check(url_id, parsed_url):
     conn = psycopg2.connect(DATABASE_URL)
     cursor = conn.cursor()
     cursor.execute(
-        "INSERT INTO url_checks (url_id, created_at) VALUES (%s, %s)",
-        (url_id, dt.datetime.now().replace(microsecond=0).isoformat()),
+        "INSERT INTO url_checks (url_id, status_code, h1, title, description, created_at) VALUES (%s, %s, %s, %s, %s, %s)", # noqa E501
+        (
+            url_id,
+            parsed_url["status_code"],
+            parsed_url["h1"],
+            parsed_url["title"],
+            parsed_url["description"],
+            dt.datetime.now().replace(microsecond=0).isoformat(),
+        ),
     )
     conn.commit()
     cursor.close()
@@ -73,28 +80,32 @@ def add_url_checks(url_id):
 
 
 def convert_url_checks(tuple_: tuple):
-    KEYS = ("id", "created_at")
+    KEYS = (
+        "id",
+        "url_id",
+        "status_code",
+        "h1",
+        "title",
+        "description",
+        "created_at"
+    )
     return dict(zip(KEYS, tuple_))
 
 
-def get_url_checks_by_date(id_url):
+def get_url_checks_by_date(id_url: int):
     conn = psycopg2.connect(DATABASE_URL)
     cursor = conn.cursor()
     cursor.execute(
-        f"SELECT id, created_at FROM url_checks WHERE url_id={id_url} ORDER BY created_at DESC"
+        f"SELECT id, url_id, status_code, h1, title, description, created_at FROM url_checks WHERE url_id={id_url} ORDER BY created_at DESC" # noqa E501
     )
     selection = cursor.fetchall()
     cursor.close()
     conn.close()
     selection = list(
         map(
-            lambda t: (t[0], t[1].strftime("%Y-%m-%d")),
-            selection
+            lambda t: (t[0], t[1], t[2], t[3], t[4], t[5], t[6].strftime("%Y-%m-%d")), # noqa E501
+            selection,
         )
     )
-    result = list(
-        map(
-            convert_url_checks, selection
-        )
-    )
+    result = list(map(convert_url_checks, selection))
     return result

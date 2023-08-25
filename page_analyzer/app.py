@@ -1,4 +1,6 @@
-from flask import ( # noqa F401
+import requests
+
+from flask import (  # noqa F401
     Flask,
     flash,
     get_flashed_messages,
@@ -8,19 +10,19 @@ from flask import ( # noqa F401
     request,
     url_for,
 )
-from settings import SECRET_KEY
+from icecream import ic  # noqa F401
 from urllib.parse import urlparse
 from validators import url as validate_url
+from page_analyzer.parser import parse_url
 from page_analyzer.repository import (
     add_url_db,
     get_url_info_db,
     get_urls_by_date,
-    add_url_checks,
-    get_url_checks_by_date
+    add_url_check,
+    get_url_checks_by_date,
 )
+from settings import SECRET_KEY
 
-
-from icecream import ic # noqa F401
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = SECRET_KEY
@@ -71,7 +73,7 @@ def url_page(id):
         "urls/show.html",
         messages=messages,
         url_info=url_info,
-        url_checks = url_checks
+        url_checks=url_checks
     )
 
 
@@ -81,26 +83,33 @@ def urls_get():
     if urls:
         updated_urls = []
         for url in urls:
-            url_id = url['id']
+            url_id = url["id"]
             if get_url_checks_by_date(url_id):
                 url_last_check = get_url_checks_by_date(url_id)[0]
-                ic(url_last_check)
-                dt_last_check = url_last_check['created_at']
+                dt_last_check = url_last_check["created_at"]
+                status_code_last_check = url_last_check["status_code"]
             else:
-                dt_last_check = ''
-            url['last_check'] = dt_last_check
+                dt_last_check = ""
+                status_code_last_check = ""
+            url["last_check"] = dt_last_check
+            url["status_code"] = status_code_last_check
             updated_urls.append(url)
     return render_template(
         "urls/index.html",
-        urls = updated_urls,
+        urls=updated_urls,
     )
 
 
 @app.post("/urls/<url_id>/checks")
 def url_checks(url_id):
-    url_id = id
-    add_url_checks(url_id)
+    url_id = url_id
+    url_name = get_url_info_db(id=url_id)["name"]
+    try:
+        requests.get(url_name)
+    except requests.exceptions.RequestException:
+        flash("Произошла ошибка при проверке", "error")
+        return redirect(url_for("url_page", id=url_id))
+    parsed_url = parse_url(url_name)
+    add_url_check(url_id, parsed_url)
     flash("Страница успешно проверена", "success")
-    return redirect(
-        url_for("url_page", id = url_id)
-    )
+    return redirect(url_for("url_page", id=url_id))
