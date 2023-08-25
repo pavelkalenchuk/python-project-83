@@ -8,13 +8,15 @@ from flask import ( # noqa F401
     request,
     url_for,
 )
-from settings import SECRET_KEY, DATABASE_URL
+from settings import SECRET_KEY
 from urllib.parse import urlparse
 from validators import url as validate_url
 from page_analyzer.repository import (
     add_url_db,
     get_url_info_db,
-    get_urls_by_date
+    get_urls_by_date,
+    add_url_checks,
+    get_url_checks_by_date
 )
 
 
@@ -26,7 +28,7 @@ app.config["SECRET_KEY"] = SECRET_KEY
 
 @app.route("/")
 def index():
-    return render_template("index.html", sk = SECRET_KEY, db = DATABASE_URL)
+    return render_template("index.html")
 
 
 @app.post("/urls")
@@ -56,8 +58,8 @@ def urls_post():
         flash("Страница уже существует", "warning")
 
     url_info = get_url_info_db(name=url)
-    id_url = url_info["id"]
-    return redirect(url_for("url_page", id=id_url))
+    url_id = url_info["id"]
+    return redirect(url_for("url_page", id=url_id))
 
 
 @app.route("/urls/<id>")
@@ -71,12 +73,29 @@ def url_page(id):
     )
 
 
-""" @app.post("urls/<id>/checks")
-def url_cheks(id):
-    url_cheks =  """
-
-
 @app.route("/urls")
 def urls_get():
     urls = get_urls_by_date()
     return render_template("urls/index.html", urls=urls)
+
+
+@app.post("/urls/checks")
+def url_cheks_post():
+    url_id = request.form.get(url_id)
+    add_url_checks(url_id)
+    return redirect(
+        url_for('url_checks_get', id=url_id)
+    )
+
+@app.route("/urls/<id>/checks")
+def url_checks(id):
+    url_checks = get_url_checks_by_date
+    return render_template(
+        'urls/checks.html',
+        url_checks = url_checks
+    )
+
+
+
+
+

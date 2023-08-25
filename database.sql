@@ -4,7 +4,7 @@ CREATE TABLE urls (
     created_at timestamp
 );
 
-CREATE TABLE url_cheks (
+CREATE TABLE url_checks (
     id smallint PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
     url_id smallint  REFERENCES urls  (id),
     status_code smallint,

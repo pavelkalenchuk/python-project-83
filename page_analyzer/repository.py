@@ -43,10 +43,9 @@ def get_url_info_db(**columns):
     return result
 
 
-def convert(tuple_: tuple):
+def convert_url(tuple_: tuple):
     KEYS = ("id", "name", "created_at")
-    result = dict(zip(KEYS, tuple_))
-    return result
+    return dict(zip(KEYS, tuple_))
 
 
 def get_urls_by_date():
@@ -57,11 +56,45 @@ def get_urls_by_date():
     selection = cursor.fetchall()
     cursor.close()
     conn.close()
-    result = list(map(convert, selection))
+    result = list(map(convert_url, selection))
     return result
 
 
-def get_url_cheks(url: str):
+def add_url_checks(url_id):
     conn = psycopg2.connect(DATABASE_URL)
     cursor = conn.cursor()
-    SQL = ""
+    cursor.execute(
+        "INSERT INTO url_checks (url_id, created_at) VALUES (%s, %s)",
+        (url_id, dt.datetime.now().replace(microsecond=0).isoformat()),
+    )
+    conn.commit()
+    cursor.close()
+    conn.close()
+
+
+def convert_url_checks(tuple_: tuple):
+    KEYS = ("id", "created_at")
+    return dict(zip(KEYS, tuple_))
+
+
+def get_url_checks_by_date(id_url):
+    conn = psycopg2.connect(DATABASE_URL)
+    cursor = conn.cursor()
+    cursor.execute(
+        f"SELECT id, created_at FROM url_checks WHERE url_id={id_url} ORDER BY created_at DESC"
+    )
+    selection = cursor.fetchall()
+    cursor.close()
+    conn.close()
+    selection = list(
+        map(
+            lambda t: (t[0], t[1].strftime("%Y-%m-%d")),
+            selection
+        )
+    )
+    result = list(
+        map(
+            convert_url_checks, selection
+        )
+    )
+    return result
