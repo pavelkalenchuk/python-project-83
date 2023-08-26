@@ -65,11 +65,40 @@
   </div>
 
     <h2 class="mt-5 mb-3">Проверки</h2>
-    <form method="post" action="{{url_for('')}}" >
-    <input type="submit" class="btn btn-primary"  value="Запустить проверку">
+    <form method="post" action="{{url_for('url_checks')}}" >
+      <input type="hidden" name="url_id" value="{{url_info.id}}">
+      <input type="submit" class="btn btn-primary"  value="Запустить проверку">
     </form>
     
-    {% extends "urls/checks.html" %}
+    <div>
+      <table class="table table-bordered table-hover mt-2" data-test="checks">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Код ответа</th>
+          <th>h1</th>
+          <th>title</th>
+          <th>description</th>
+          <th>Дата создания</th>
+        </tr>
+      </thead>
+      {% if url_checks %}
+        <tbody>
+          {% for url_check in url_checks %}
+          <tr>
+            <td>{{url_check.id}}</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>{{url_check.created_at}}</td>
+          </tr>
+          {% endfor %}
+      {% endif %}
+      
+      </tbody>
+      </table>
+  </div>
 
     </div>
   </main>

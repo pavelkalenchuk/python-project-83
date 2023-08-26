@@ -66,36 +66,42 @@ def urls_post():
 def url_page(id):
     messages = get_flashed_messages(with_categories=True)
     url_info = get_url_info_db(id=id)
+    url_checks = get_url_checks_by_date(id)
     return render_template(
         "urls/show.html",
         messages=messages,
-        url_info=url_info
+        url_info=url_info,
+        url_checks = url_checks
     )
 
 
 @app.route("/urls")
 def urls_get():
     urls = get_urls_by_date()
-    return render_template("urls/index.html", urls=urls)
+    if urls:
+        updated_urls = []
+        for url in urls:
+            url_id = url['id']
+            if get_url_checks_by_date(url_id):
+                url_last_check = get_url_checks_by_date(url_id)[0]
+                ic(url_last_check)
+                dt_last_check = url_last_check['created_at']
+            else:
+                dt_last_check = ''
+            url['last_check'] = dt_last_check
+            updated_urls.append(url)
+    return render_template(
+        "urls/index.html",
+        urls = updated_urls,
+    )
 
 
 @app.post("/urls/checks")
-def url_cheks_post():
-    url_id = request.form.get(url_id)
+def url_checks():
+    url_id = request.form.get('url_id')
     add_url_checks(url_id)
+    ic(url_id)
+    flash("Страница успешно проверена", "success")
     return redirect(
-        url_for('url_checks_get', id=url_id)
+        url_for("url_page", id = url_id)
     )
-
-@app.route("/urls/<id>/checks")
-def url_checks(id):
-    url_checks = get_url_checks_by_date
-    return render_template(
-        'urls/checks.html',
-        url_checks = url_checks
-    )
-
-
-
-
-
