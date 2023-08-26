@@ -96,11 +96,10 @@ def urls_get():
     )
 
 
-@app.post("/urls/checks")
-def url_checks():
-    url_id = request.form.get('url_id')
+@app.post("/urls/<url_id>/checks")
+def url_checks(url_id):
+    url_id = id
     add_url_checks(url_id)
-    ic(url_id)
     flash("Страница успешно проверена", "success")
     return redirect(
         url_for("url_page", id = url_id)

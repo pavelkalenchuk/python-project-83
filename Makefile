@@ -40,4 +40,11 @@ database:
 conn:
 		psql -a -d $(DATABASE_URL)
 
+DATABASE_URL_LOCAL ?=postgres://pavel:0000@localhost/page_analyzer
+local:
+		psql -a -d $(DATABASE_URL_LOCAL)
+
+localdb:
+		psql -a -d $(DATABASE_URL_LOCAL) -f database.sql
+
 build: install database
