@@ -14,4 +14,4 @@ jobs:
           make install
       - name: Run linter
         run: |
-          make lint_py
+          make lint

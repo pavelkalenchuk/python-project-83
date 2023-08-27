@@ -1,3 +1,7 @@
+DROP TABLE IF EXISTS urls CASCADE;
+
+DROP TABLE IF EXISTS url_checks CASCADE;
+
 CREATE TABLE urls (
     id smallint PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
     name varchar(255),
@@ -6,7 +10,7 @@ CREATE TABLE urls (
 
 CREATE TABLE url_checks (
     id smallint PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
-    url_id smallint  REFERENCES urls  (id),
+    url_id smallint REFERENCES urls (id),
     status_code smallint,
     h1 text,
     title text,

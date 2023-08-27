@@ -1,16 +1,14 @@
 import requests
 
-from flask import (  # noqa F401
+from flask import (
     Flask,
     flash,
     get_flashed_messages,
-    make_response,
     redirect,
     render_template,
     request,
     url_for,
 )
-from icecream import ic  # noqa F401
 from urllib.parse import urlparse
 from validators import url as validate_url
 from page_analyzer.parser import parse_url

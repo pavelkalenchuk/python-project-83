@@ -7,5 +7,3 @@ dist/
 coverage.xml
 trash/
 .env
-pyproject
-marks

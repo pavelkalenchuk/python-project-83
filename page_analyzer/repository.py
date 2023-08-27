@@ -1,7 +1,6 @@
 import psycopg2
 import datetime as dt
 
-from icecream import ic  # noqa F401
 from settings import DATABASE_URL
 
 
@@ -43,7 +42,7 @@ def get_url_info_db(**columns):
     return result
 
 
-def convert_url(tuple_: tuple):
+def convert_urls(tuple_: tuple):
     KEYS = ("id", "name", "created_at")
     return dict(zip(KEYS, tuple_))
 
@@ -56,7 +55,7 @@ def get_urls_by_date():
     selection = cursor.fetchall()
     cursor.close()
     conn.close()
-    result = list(map(convert_url, selection))
+    result = list(map(convert_urls, selection))
     return result
 
 

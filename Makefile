@@ -33,17 +33,15 @@ PORT ?= 8000
 start:
 	poetry run gunicorn -w 5 -b 0.0.0.0:$(PORT) page_analyzer:app
 
-DATABASE_URL ?= postgres://pavel:ER6HY8FbStjVTpbjO0iR57sVhhWdUmtl@dpg-cj6o674l975s73e7aof0-a.frankfurt-postgres.render.com/page_analyzer_42hk
+DATABASE_URL ?=postgres://pavel:ER6HY8FbStjVTpbjO0iR57sVhhWdUmtl@dpg-cj6o674l975s73e7aof0-a/page_analyzer_42hk
 database:
 		psql -a -d $(DATABASE_URL) -f database.sql
 
+DATABASE_URL_REMOTE ?=postgres://pavel:ER6HY8FbStjVTpbjO0iR57sVhhWdUmtl@dpg-cj6o674l975s73e7aof0-a.frankfurt-postgres.render.com/page_analyzer_42hk
 conn:
-		psql -a -d $(DATABASE_URL)
+		psql -a -d $(DATABASE_URL_REMOTE)
 
 DATABASE_URL_LOCAL ?=postgres://pavel:0000@localhost/page_analyzer
-local:
-		psql -a -d $(DATABASE_URL_LOCAL)
-
 localdb:
 		psql -a -d $(DATABASE_URL_LOCAL) -f database.sql
 
