@@ -38,11 +38,11 @@ def urls_post():
 
     if not validated_url or (len(url) > 255 and validate_url):
         if len(url) > 255:
-            flash("URL превышает 255 символов", "danger")
+            flash("URL превышает 255 символов", "dark")
         elif not validated_url.value:
-            flash("URL обязателен", "danger")
+            flash("URL обязателен", "dark")
         else:
-            flash("Некорректный URL", "danger")
+            flash("Некорректный URL", "dark")
         return render_template(
             "index.html",
             url=url,
@@ -103,9 +103,10 @@ def url_checks(url_id):
     url_id = url_id
     url_name = get_url_info_db(id=url_id)["name"]
     try:
-        requests.get(url_name)
-    except requests.exceptions.RequestException:
-        flash("Произошла ошибка при проверке", "error")
+        r = requests.get(url_name)
+        r.raise_for_status()
+    except requests.exceptions.HTTPError:
+        flash("Произошла ошибка при проверке", "dark")
         return redirect(url_for("url_page", id=url_id))
     parsed_url = parse_url(url_name)
     add_url_check(url_id, parsed_url)
