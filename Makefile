@@ -33,7 +33,5 @@ PORT ?= 8000
 start:
 	poetry run gunicorn -w 5 -b 0.0.0.0:$(PORT) page_analyzer:app
 
-database:
-		psql -a -d $(DATABASE_URL) -f database.sql
-
-build: install database
+build:
+		./build.sh
