@@ -46,7 +46,7 @@ def urls_post():
         return render_template(
             "index.html",
             url=url,
-        )
+        ), 422
 
     parsed_url = urlparse(url)
     url = f"{parsed_url.scheme}://{parsed_url.netloc}"
