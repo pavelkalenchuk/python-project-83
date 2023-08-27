@@ -78,8 +78,8 @@ def url_page(id):
 @app.route("/urls")
 def urls_get():
     urls = get_urls_by_date()
+    updated_urls = []
     if urls:
-        updated_urls = []
         for url in urls:
             url_id = url["id"]
             if get_url_checks_by_date(url_id):
