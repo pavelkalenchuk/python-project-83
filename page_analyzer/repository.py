@@ -63,7 +63,9 @@ def add_url_check(url_id, parsed_url):
     conn = psycopg2.connect(DATABASE_URL)
     cursor = conn.cursor()
     cursor.execute(
-        "INSERT INTO url_checks (url_id, status_code, h1, title, description, created_at) VALUES (%s, %s, %s, %s, %s, %s)", # noqa E501
+        """INSERT INTO url_checks
+        (url_id, status_code, h1, title, description, created_at)
+        VALUES (%s, %s, %s, %s, %s, %s)""", # noqa E501
         (
             url_id,
             parsed_url["status_code"],
@@ -95,14 +97,18 @@ def get_url_checks_by_date(id_url: int):
     conn = psycopg2.connect(DATABASE_URL)
     cursor = conn.cursor()
     cursor.execute(
-        f"SELECT id, url_id, status_code, h1, title, description, created_at FROM url_checks WHERE url_id={id_url} ORDER BY created_at DESC" # noqa E501
+        f"""SELECT
+        id, url_id, status_code, h1, title, description,
+        created_at FROM url_checks
+        WHERE url_id={id_url} ORDER BY created_at DESC"""
     )
     selection = cursor.fetchall()
     cursor.close()
     conn.close()
     selection = list(
         map(
-            lambda t: (t[0], t[1], t[2], t[3], t[4], t[5], t[6].strftime("%Y-%m-%d")), # noqa E501
+            lambda t: (t[0], t[1], t[2], t[3], t[4], t[5], \
+                       t[6].strftime("%Y-%m-%d")), # noqa E501
             selection,
         )
     )
