@@ -67,10 +67,12 @@ def add_url_check(url_id, parsed_url):
         (url_id, status_code, h1, title, description, created_at)
         VALUES (%s, %s, %s, %s, %s, %s)""",
         (
-        url_id,parsed_url["status_code"],
-        parsed_url["h1"],
-        parsed_url["title"],parsed_url["description"],
-        dt.datetime.now().replace(microsecond=0).isoformat(),
+            url_id,
+            parsed_url["status_code"],
+            parsed_url["h1"],
+            parsed_url["title"],
+            parsed_url["description"],
+            dt.datetime.now().replace(microsecond=0).isoformat(),
         ),
     )
     conn.commit()
@@ -79,15 +81,8 @@ def add_url_check(url_id, parsed_url):
 
 
 def convert_url_checks(tuple_: tuple):
-    KEYS = (
-        "id",
-        "url_id",
-        "status_code",
-        "h1",
-        "title",
-        "description",
-        "created_at"
-    )
+    KEYS = ("id", "url_id", "status_code",
+            "h1", "title", "description", "created_at")
     return dict(zip(KEYS, tuple_))
 
 
@@ -105,8 +100,15 @@ def get_url_checks_by_date(id_url: int):
     conn.close()
     selection = list(
         map(
-            lambda t: (t[0], t[1], t[2], t[3], t[4], t[5], \
-                       t[6].strftime("%Y-%m-%d")), # noqa E501
+            lambda t: (
+                t[0],
+                t[1],
+                t[2],
+                t[3],
+                t[4],
+                t[5],
+                t[6].strftime("%Y-%m-%d"),
+            ),  # noqa E501
             selection,
         )
     )
