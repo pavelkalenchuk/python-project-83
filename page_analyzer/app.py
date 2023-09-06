@@ -13,6 +13,7 @@ from urllib.parse import urlparse
 from validators import url as validate_url
 from page_analyzer.parser import parse_url
 from page_analyzer.repository import (
+    psql_db,
     add_url_db,
     get_url_info_db,
     get_urls_by_date,
@@ -24,6 +25,7 @@ from settings import SECRET_KEY
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = SECRET_KEY
+psql_db.init_app(app)
 
 
 @app.route("/")
