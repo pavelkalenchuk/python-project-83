@@ -1,39 +1,33 @@
-import psycopg2
 import datetime as dt
 
-from settings import DATABASE_URL
+from page_analyzer.database import PsqlDatabase
+
+psql_db = PsqlDatabase()
 
 
 def add_url_db(url: str):
-    conn = psycopg2.connect(DATABASE_URL)
-    cursor = conn.cursor()
-    cursor.execute(
-        "INSERT INTO urls (name, created_at) VALUES (%s, %s)",
-        (url, dt.datetime.now().replace(microsecond=0).isoformat()),
-    )
-    conn.commit()
-    cursor.close()
-    conn.close()
+    with psql_db.get_cursor() as cursor:
+        cursor.execute(
+            "INSERT INTO urls (name, created_at) VALUES (%s, %s)",
+            (url, dt.datetime.now().replace(microsecond=0).isoformat()),
+        )
 
 
 def get_url_info_db(**columns):
-    conn = psycopg2.connect(DATABASE_URL)
-    cursor = conn.cursor()
-    if "name" in columns:
-        column = "name"
-        value = columns["name"]
-    if "id" in columns:
-        column = "id"
-        value = columns["id"]
-    cursor.execute(
-        f"SELECT id, name, created_at FROM urls WHERE {column} = (%s)",
-        (value,)
-    )
-    selection = cursor.fetchone()
+    with psql_db.get_cursor() as cursor:
+        if "name" in columns:
+            column = "name"
+            value = columns["name"]
+        if "id" in columns:
+            column = "id"
+            value = columns["id"]
+        cursor.execute(
+            f"SELECT id, name, created_at FROM urls WHERE {column} = (%s)",
+            (value,)
+        )
+        selection = cursor.fetchone()
     if not selection:
         return False
-    cursor.close()
-    conn.close()
     result = {
         "id": selection[0],
         "name": selection[1],
@@ -48,56 +42,46 @@ def convert_urls(tuple_: tuple):
 
 
 def get_urls_by_date():
-    conn = psycopg2.connect(DATABASE_URL)
-    cursor = conn.cursor()
-    SQL = "SELECT * FROM urls ORDER BY created_at DESC"
-    cursor.execute(SQL)
-    selection = cursor.fetchall()
-    cursor.close()
-    conn.close()
+    with psql_db.get_cursor() as cursor:
+        SQL = "SELECT * FROM urls ORDER BY created_at DESC"
+        cursor.execute(SQL)
+        selection = cursor.fetchall()
     result = list(map(convert_urls, selection))
     return result
 
 
 def add_url_check(url_id, parsed_url):
-    conn = psycopg2.connect(DATABASE_URL)
-    cursor = conn.cursor()
-    cursor.execute(
-        """INSERT INTO url_checks
-        (url_id, status_code, h1, title, description, created_at)
-        VALUES (%s, %s, %s, %s, %s, %s)""",
-        (
-            url_id,
-            parsed_url["status_code"],
-            parsed_url["h1"],
-            parsed_url["title"],
-            parsed_url["description"],
-            dt.datetime.now().replace(microsecond=0).isoformat(),
-        ),
-    )
-    conn.commit()
-    cursor.close()
-    conn.close()
+    with psql_db.get_cursor() as cursor:
+        cursor.execute(
+            """INSERT INTO url_checks
+            (url_id, status_code, h1, title, description, created_at)
+            VALUES (%s, %s, %s, %s, %s, %s)""",
+            (
+                url_id, # noqa E126
+                parsed_url["status_code"],
+                parsed_url["h1"],
+                parsed_url["title"],
+                parsed_url["description"],
+                dt.datetime.now().replace(microsecond=0).isoformat(),
+            ),
+        )
 
 
 def convert_url_checks(tuple_: tuple):
-    KEYS = ("id", "url_id", "status_code",
-            "h1", "title", "description", "created_at")
+    KEYS = ("id", "url_id", "status_code", "h1",
+            "title", "description", "created_at")
     return dict(zip(KEYS, tuple_))
 
 
 def get_url_checks_by_date(id_url: int):
-    conn = psycopg2.connect(DATABASE_URL)
-    cursor = conn.cursor()
-    cursor.execute(
-        f"""SELECT
-        id, url_id, status_code, h1, title, description,
-        created_at FROM url_checks
-        WHERE url_id={id_url} ORDER BY created_at DESC"""
-    )
-    selection = cursor.fetchall()
-    cursor.close()
-    conn.close()
+    with psql_db.get_cursor() as cursor:
+        cursor.execute(
+            f"""SELECT
+            id, url_id, status_code, h1, title, description,
+            created_at FROM url_checks
+            WHERE url_id={id_url} ORDER BY created_at DESC"""
+        )
+        selection = cursor.fetchall()
     selection = list(
         map(
             lambda t: (
