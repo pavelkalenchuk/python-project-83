@@ -91,9 +91,10 @@ def urls_get():
             updated_url = {}
             url_id = url["id"]
             if get_url_checks_by_date(url_id):
-                dt_last_check = get_url_checks_by_date(url_id)[0]["created_at"]
+                last_check = get_url_checks_by_date(url_id)[0]
+                dt_last_check = last_check["created_at"]
                 dt_last_check = dt_last_check.strftime("%Y-%m-%d")
-                code_last_check = get_url_checks_by_date(url_id)[0]["status_code"]
+                code_last_check = last_check["status_code"]
             else:
                 dt_last_check = ""
                 code_last_check = ""

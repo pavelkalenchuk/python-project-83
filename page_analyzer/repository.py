@@ -14,11 +14,12 @@ def add_url(url: str):
             (url, dt.datetime.now().replace(microsecond=0).isoformat()),
         )
         cursor.execute(
-            f"SELECT id FROM urls where name=(%s)",
+            "SELECT id FROM urls where name=(%s)",
             (url,)
         )
         url_id = cursor.fetchone()[0]
     return url_id
+
 
 def get_urls(**columns):
     with psql_db.get_cursor() as cursor:
