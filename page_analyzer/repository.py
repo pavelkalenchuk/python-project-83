@@ -1,19 +1,26 @@
 import datetime as dt
 
+from psycopg2.extras import DictCursor
 from page_analyzer.database import PsqlDatabase
+
 
 psql_db = PsqlDatabase()
 
 
-def add_url_db(url: str):
+def add_url(url: str):
     with psql_db.get_cursor() as cursor:
         cursor.execute(
             "INSERT INTO urls (name, created_at) VALUES (%s, %s)",
             (url, dt.datetime.now().replace(microsecond=0).isoformat()),
         )
+        cursor.execute(
+            f"SELECT id FROM urls where name=(%s)",
+            (url,)
+        )
+        url_id = cursor.fetchone()[0]
+    return url_id
 
-
-def get_url_info_db(**columns):
+def get_urls(**columns):
     with psql_db.get_cursor() as cursor:
         if "name" in columns:
             column = "name"
@@ -36,18 +43,12 @@ def get_url_info_db(**columns):
     return result
 
 
-def convert_urls(tuple_: tuple):
-    KEYS = ("id", "name", "created_at")
-    return dict(zip(KEYS, tuple_))
-
-
 def get_urls_by_date():
-    with psql_db.get_cursor() as cursor:
+    with psql_db.get_cursor(cursor_mode=DictCursor) as cursor:
         SQL = "SELECT * FROM urls ORDER BY created_at DESC"
         cursor.execute(SQL)
         selection = cursor.fetchall()
-    result = list(map(convert_urls, selection))
-    return result
+    return selection
 
 
 def add_url_check(url_id, parsed_url):
@@ -67,14 +68,8 @@ def add_url_check(url_id, parsed_url):
         )
 
 
-def convert_url_checks(tuple_: tuple):
-    KEYS = ("id", "url_id", "status_code", "h1",
-            "title", "description", "created_at")
-    return dict(zip(KEYS, tuple_))
-
-
-def get_url_checks_by_date(id_url: int):
-    with psql_db.get_cursor() as cursor:
+def get_url_checks_by_date(id_url):
+    with psql_db.get_cursor(cursor_mode=DictCursor) as cursor:
         cursor.execute(
             f"""SELECT
             id, url_id, status_code, h1, title, description,
@@ -82,19 +77,4 @@ def get_url_checks_by_date(id_url: int):
             WHERE url_id={id_url} ORDER BY created_at DESC"""
         )
         selection = cursor.fetchall()
-    selection = list(
-        map(
-            lambda t: (
-                t[0],
-                t[1],
-                t[2],
-                t[3],
-                t[4],
-                t[5],
-                t[6].strftime("%Y-%m-%d"),
-            ),  # noqa E501
-            selection,
-        )
-    )
-    result = list(map(convert_url_checks, selection))
-    return result
+    return selection

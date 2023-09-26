@@ -1,4 +1,6 @@
+from psycopg2 import DatabaseError
 from psycopg2.pool import SimpleConnectionPool
+from psycopg2.extensions import cursor as DefaultCursor
 from contextlib import contextmanager
 from settings import DATABASE_URL
 
@@ -17,12 +19,14 @@ class PsqlDatabase:
         return self.pool
 
     @contextmanager
-    def get_cursor(self):
+    def get_cursor(self, cursor_mode=DefaultCursor):
         if self.pool is None:
             self.connect()
         con = self.pool.getconn()
         try:
-            yield con.cursor()
+            yield con.cursor(cursor_factory=cursor_mode)
             con.commit()
+        except (Exception, DatabaseError) as error: # noqa F841
+            con.rollback()
         finally:
             self.pool.putconn(con)

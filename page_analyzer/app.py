@@ -1,5 +1,6 @@
 import requests
 
+
 from flask import (
     Flask,
     flash,
@@ -14,8 +15,8 @@ from validators import url as validate_url
 from page_analyzer.parser import parse_url
 from page_analyzer.repository import (
     psql_db,
-    add_url_db,
-    get_url_info_db,
+    add_url,
+    get_urls,
     get_urls_by_date,
     add_url_check,
     get_url_checks_by_date,
@@ -56,22 +57,23 @@ def urls_post():
     parsed_url = urlparse(url)
     url = f"{parsed_url.scheme}://{parsed_url.netloc}"
 
-    if not get_url_info_db(name=url):
-        add_url_db(url)
+    if not get_urls(name=url):
+        url_id = add_url(url)
         flash("Страница успешно добавлена", "success")
     else:
         flash("Страница уже существует", "warning")
 
-    url_info = get_url_info_db(name=url)
-    url_id = url_info["id"]
     return redirect(url_for("url_page", id=url_id))
 
 
 @app.route("/urls/<id>")
 def url_page(id):
+    id = int(id)
     messages = get_flashed_messages(with_categories=True)
-    url_info = get_url_info_db(id=id)
+    url_info = get_urls(id=id)
     url_checks = get_url_checks_by_date(id)
+    for url_check in url_checks:
+        url_check['created_at'] = url_check['created_at'].strftime("%Y-%m-%d")
     return render_template(
         "urls/show.html",
         messages=messages,
@@ -86,17 +88,20 @@ def urls_get():
     updated_urls = []
     if urls:
         for url in urls:
+            updated_url = {}
             url_id = url["id"]
             if get_url_checks_by_date(url_id):
-                url_last_check = get_url_checks_by_date(url_id)[0]
-                dt_last_check = url_last_check["created_at"]
-                status_code_last_check = url_last_check["status_code"]
+                dt_last_check = get_url_checks_by_date(url_id)[0]["created_at"]
+                dt_last_check = dt_last_check.strftime("%Y-%m-%d")
+                code_last_check = get_url_checks_by_date(url_id)[0]["status_code"]
             else:
                 dt_last_check = ""
-                status_code_last_check = ""
-            url["last_check"] = dt_last_check
-            url["status_code"] = status_code_last_check
-            updated_urls.append(url)
+                code_last_check = ""
+            updated_url["last_check"] = dt_last_check
+            updated_url["status_code"] = code_last_check
+            updated_url['id'] = url['id']
+            updated_url['name'] = url['name']
+            updated_urls.append(updated_url)
     return render_template(
         "urls/index.html",
         urls=updated_urls,
@@ -106,7 +111,7 @@ def urls_get():
 @app.post("/urls/<url_id>/checks")
 def url_checks(url_id):
     url_id = url_id
-    url_name = get_url_info_db(id=url_id)["name"]
+    url_name = get_urls(id=url_id)["name"]
     try:
         r = requests.get(url_name)
         r.raise_for_status()
