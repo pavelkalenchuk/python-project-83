@@ -62,6 +62,7 @@ def urls_post():
         flash("Страница успешно добавлена", "success")
     else:
         flash("Страница уже существует", "warning")
+        url_id = get_urls(name=url)['id']
 
     return redirect(url_for("url_page", id=url_id))
 

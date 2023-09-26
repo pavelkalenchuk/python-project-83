@@ -1,4 +1,4 @@
-[![Test](https://github.com/pavelkalenchuk/python-project-83/actions/workflows/Test.yml/badge.svg)](https://github.com/pavelkalenchuk/python-project-83/actions/workflows/Test.yml) [![Maintainability](https://api.codeclimate.com/v1/badges/19ae41cf5308c4edbb41/maintainability)](https://codeclimate.com/github/pavelkalenchuk/python-project-83/maintainability)
+[![hexlet-check](https://github.com/pavelkalenchuk/python-project-83/actions/workflows/hexlet-check.yml/badge.svg)](https://github.com/pavelkalenchuk/python-project-83/actions/workflows/hexlet-check.yml) [![linter-check](https://github.com/pavelkalenchuk/python-project-83/actions/workflows/linter-check.yml/badge.svg)](https://github.com/pavelkalenchuk/python-project-83/actions/workflows/linter-check.yml)  [![Maintainability](https://api.codeclimate.com/v1/badges/19ae41cf5308c4edbb41/maintainability)](https://codeclimate.com/github/pavelkalenchuk/python-project-83/maintainability)
 ### Web application "Page analyzer"
 Cheсk web sites for SEO applicability.
 
